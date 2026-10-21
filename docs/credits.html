@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credits and thanks</title>
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --line:#ccc; --accent:#0b5fa5; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#222; --fg:#eee; --line:#555; --accent:#7db8ee; } }
+  body { margin:0 auto; padding:16px; max-width:46rem; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, sans-serif; }
+  a { color:var(--accent); }
+  h2 { margin-top:2rem; border-bottom:1px solid var(--line); padding-bottom:.2rem; }
+  dt { font-weight:600; margin-top:.6rem; }
+  dd { margin:0 0 0 1rem; }
+  .ja { font-size:.9em; opacity:.85; }
+</style>
+</head>
+<body>
+<p><a href="./">← Back to the map</a></p>
+<h1>Credits and thanks</h1>
+<p>This site is a dwg7 activity. It is not an official project of OpenAerialMap (OAM) or HOT.
+We tried the new OAM and show its image on a map. We want to say thank you, and to give correct credit.</p>
+<p class="ja">このサイトは dwg7 の活動であり、OAM や HOT の公式なものではありません。新しい OAM を試し、その画像を地図にしています。感謝と、正確な出典の表示をここに書きます。</p>
+
+<h2>The image</h2>
+<dl>
+  <dt>Title</dt><dd>Waterloo, Sierra Leone</dd>
+  <dt>Provider</dt><dd>HOT (Humanitarian OpenStreetMap Team). OAM lists HOT as provider and as the licensor.</dd>
+  <dt>Acquired</dt><dd>2026-02-07 to 2026-06-03 (dates in the OAM metadata)</dd>
+  <dt>Aircraft and size</dt><dd>DJI Mini 5 Pro (a small drone). About 5 cm per pixel. The source file is about 4.7 GB.</dd>
+  <dt>Added to OAM</dt><dd>2026-09-19</dd>
+  <dt>License</dt><dd><a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+    (<a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">legal text</a>).
+    This is the value in the OAM metadata and in the OAM STAC record.</dd>
+  <dt>Original page</dt><dd><a href="https://imagery.hotosm.org/browse?lat=8.3302&amp;lon=-13.0693&amp;zoom=17.2&amp;selected_id=6aae46379ed4c3b5f2d117f9">New OAM</a>
+    (ID <code>6aae46379ed4c3b5f2d117f9</code>) ·
+    <a href="https://api.imagery.hotosm.org/stac/collections/openaerialmap/items/6aae46379ed4c3b5f2d117f9">STAC record</a> ·
+    <a href="https://umap.hotosm.org/en/map/waterloo-open-drone-imagery_6651">uMap that uses this image</a></dd>
+</dl>
+
+<h2>What we changed (license note)</h2>
+<p>We changed the <strong>format</strong>. The original is one large GeoTIFF. We cut it into map tiles
+(WebP, 512 px, zoom 10 to 21, resampled with the Lanczos method) and packed them into a PMTiles file.
+We also tested the PMTiles file that OAM makes itself (zoom 10 to 20, 256 px).
+The pixels were resampled; nothing was added or painted over.</p>
+<p>The tiles we serve are also licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>,
+the same as the source image. If you reuse them, please give the credit above and keep the same license.</p>
+
+<h2>Overture Maps data</h2>
+<p>The building and road lines come from <a href="https://overturemaps.org">Overture Maps Foundation</a>,
+through tiles already served on stars.optgeo.org. We follow the
+<a href="https://docs.overturemaps.org/attribution">Overture attribution page</a>.</p>
+<ul>
+  <li><strong>Buildings</strong> (ODbL): © OpenStreetMap contributors; also Esri Community Maps contributors (CC BY 4.0),
+    Microsoft Global ML Building Footprints (ODbL), Google Open Buildings (CC BY 4.0), and other sources listed by Overture.</li>
+  <li><strong>Transportation / roads</strong> (ODbL): © OpenStreetMap contributors; data from TomTom is also listed by Overture.</li>
+  <li>Credit line we show on the map: <em>© Overture Maps Foundation, © OpenStreetMap contributors</em>.</li>
+</ul>
+<p>We did not check which of these sources actually appear in Waterloo. We list the sources that Overture lists for each theme.</p>
+<p>OpenStreetMap data is available under the <a href="https://www.openstreetmap.org/copyright">Open Database License</a>.</p>
+
+<h2>Thank you</h2>
+<p>We say thank you with specific things.</p>
+<ul>
+  <li><strong>To the people who flew and processed this survey.</strong>
+    The record says the flights ran from February to June 2026 with a small DJI Mini 5 Pro, and the result is sharp at about 5 cm.
+    That is a lot of careful flying and processing. The public records do not name the pilots, so we do not name anyone.
+    The OAM record gives Ping Yee of HOT as the contact.</li>
+  <li><strong>To HOT</strong>, for providing the image and for choosing an open license (CC BY-SA 4.0),
+    so that anyone may use it, including us.</li>
+  <li><strong>To the people who built the new OAM.</strong>
+    The image, its STAC record and the tile-pack API are open. We could try the PMTiles feature without a sign-in, in the same way any user can.
+    A short, clear help text on the API page also helped us. Our trial notes are in
+    <a href="https://github.com/dwg7/waterloo/blob/main/docs/oam-pmtiles.md">docs/oam-pmtiles.md</a>; we wrote them as a thank-you and a report, not as criticism.</li>
+  <li><strong>To OpenStreetMap contributors and Overture Maps contributors</strong>, for building and sharing the building and road data that we put on top of the image.</li>
+  <li><strong>To the open-source projects</strong> we use: MapLibre GL JS, PMTiles (Protomaps), GDAL, and Martin.</li>
+</ul>
+<p class="ja">日本語の補足：撮影者の個人名は公開情報で確認できないため書いていません。OAM のメタデータにある連絡先として Ping Yee さん（HOT）のお名前のみ、公開されている範囲で記しました。</p>
+
+<p>No marks or notes on this map point to people or houses. The map only shows the image.</p>
+<p>Source code and notes: <a href="https://github.com/dwg7/waterloo">github.com/dwg7/waterloo</a> (UNopenGIS/7 #1023).</p>
+</body>
+</html>

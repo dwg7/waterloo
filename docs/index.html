@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waterloo drone imagery (OAM PMTiles)</title>
+<meta name="description" content="High-resolution drone imagery of Waterloo, Sierra Leone (HOT, via OpenAerialMap), with Overture Maps buildings. A dwg7 activity, not an official OAM or HOT project.">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --line:#ccc; --accent:#0b5fa5; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#222; --fg:#eee; --line:#555; --accent:#7db8ee; } }
+  html, body { margin:0; height:100%; font:14px/1.4 system-ui, sans-serif; }
+  #map { position:absolute; inset:0; }
+  .panel { position:absolute; top:10px; left:10px; max-width:260px; padding:10px 12px;
+           background:var(--bg); color:var(--fg); border:1px solid var(--line); border-radius:6px; z-index:2; }
+  .panel h1 { font-size:15px; margin:0 0 4px; }
+  .panel p { margin:4px 0; font-size:12px; }
+  .panel label { display:block; margin:6px 0 2px; }
+  .panel input[type=range] { width:100%; }
+  .panel a { color:var(--accent); }
+  .credit { position:absolute; left:10px; bottom:26px; max-width:min(420px, calc(100% - 20px)); padding:6px 8px;
+            background:var(--bg); color:var(--fg); opacity:.95; border:1px solid var(--line); border-radius:6px;
+            font-size:11px; z-index:2; }
+  .credit a { color:var(--accent); }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="panel">
+  <h1>Waterloo, Sierra Leone</h1>
+  <p>Drone imagery (about 5 cm) with Overture buildings. A dwg7 activity. Not an official OAM or HOT project.</p>
+  <label><input type="checkbox" id="imgOn" checked> Drone imagery</label>
+  <input type="range" id="imgOp" min="0" max="100" value="100" aria-label="Imagery opacity">
+  <label><input type="checkbox" id="bldOn" checked> Overture buildings (outline)</label>
+  <input type="range" id="bldOp" min="0" max="100" value="90" aria-label="Buildings opacity">
+  <label><input type="checkbox" id="roadOn"> Overture roads</label>
+  <p><a href="credits.html">Credits and thanks</a> · <a href="https://github.com/dwg7/waterloo/blob/main/docs/oam-pmtiles.md">Report on OAM PMTiles</a></p>
+</div>
+
+<div class="credit">
+  Imagery: <a href="https://imagery.hotosm.org/browse?lat=8.3302&amp;lon=-13.0693&amp;zoom=17.2&amp;selected_id=6aae46379ed4c3b5f2d117f9">HOT via OpenAerialMap</a>,
+  DJI Mini 5 Pro, 2026-02-07 to 2026-06-03,
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; converted to PMTiles by dwg7.
+  Buildings and roads: <a href="https://docs.overturemaps.org/attribution">© Overture Maps Foundation</a>,
+  <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> (ODbL).
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
+<script>
+  // Imagery is read directly from the PMTiles file on stars (HTTP range requests).
+  const IMAGERY = "pmtiles://https://depot.optgeo.org/waterloo-oam.pmtiles";
+  const protocol = new pmtiles.Protocol();
+  maplibregl.addProtocol("pmtiles", protocol.tile);
+
+  const map = new maplibregl.Map({
+    container: "map",
+    hash: true,
+    center: [-13.0693, 8.3302],
+    zoom: 16,
+    maxZoom: 22,
+    style: {
+      version: 8,
+      sources: {
+        imagery: { type: "raster", url: IMAGERY, tileSize: 512 },
+        buildings: { type: "vector", url: "https://stars.optgeo.org/overture_buildings" },
+        roads: { type: "vector", url: "https://stars.optgeo.org/overture_transportation" }
+      },
+      layers: [
+        { id: "bg", type: "background", paint: { "background-color": "#d9d6cf" } },
+        { id: "imagery", type: "raster", source: "imagery" },
+        { id: "roads", type: "line", source: "roads", "source-layer": "segment",
+          layout: { visibility: "none" },
+          paint: { "line-color": "#ffd400", "line-width": 1.5 } },
+        { id: "buildings-fill", type: "fill", source: "buildings", "source-layer": "building",
+          paint: { "fill-color": "#ff3b30", "fill-opacity": 0.12 } },
+        { id: "buildings-line", type: "line", source: "buildings", "source-layer": "building",
+          paint: { "line-color": "#ff3b30", "line-width": 1.2, "line-opacity": 0.9 } }
+      ]
+    }
+  });
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: false }), "top-right");
+  map.addControl(new maplibregl.ScaleControl(), "bottom-right");
+
+  const $ = id => document.getElementById(id);
+  const vis = (ids, on) => ids.forEach(i => map.setLayoutProperty(i, "visibility", on ? "visible" : "none"));
+  map.on("load", () => {
+    $("imgOn").onchange = e => vis(["imagery"], e.target.checked);
+    $("imgOp").oninput = e => map.setPaintProperty("imagery", "raster-opacity", e.target.value / 100);
+    $("bldOn").onchange = e => vis(["buildings-fill", "buildings-line"], e.target.checked);
+    $("bldOp").oninput = e => {
+      const o = e.target.value / 100;
+      map.setPaintProperty("buildings-line", "line-opacity", o);
+      map.setPaintProperty("buildings-fill", "fill-opacity", o * 0.13);
+    };
+    $("roadOn").onchange = e => vis(["roads"], e.target.checked);
+  });
+</script>
+</body>
+</html>
