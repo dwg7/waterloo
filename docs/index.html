@@ -47,13 +47,9 @@
 </div>
 
 <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
-<script src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
 <script>
-  // Imagery is read directly from the PMTiles file on stars (HTTP range requests).
-  const IMAGERY = "pmtiles://https://depot.optgeo.org/waterloo-oam.pmtiles";
-  const protocol = new pmtiles.Protocol();
-  maplibregl.addProtocol("pmtiles", protocol.tile);
-
+  // Imagery: the PMTiles file on stars, served as XYZ tiles by Martin (TileJSON gives bounds, zoom and attribution).
+  // (Reading the .pmtiles file directly with the pmtiles library needs CORS for Range requests; see DECISIONS.md.)
   const map = new maplibregl.Map({
     container: "map",
     hash: true,
@@ -63,7 +59,7 @@
     style: {
       version: 8,
       sources: {
-        imagery: { type: "raster", url: IMAGERY, tileSize: 512 },
+        imagery: { type: "raster", url: "https://stars.optgeo.org/waterloo-oam", tileSize: 512 },
         buildings: { type: "vector", url: "https://stars.optgeo.org/overture_buildings" },
         roads: { type: "vector", url: "https://stars.optgeo.org/overture_transportation" }
       },

@@ -34,7 +34,7 @@ See [credits](docs/credits.html) for details.
 
 ## What is here
 
-- `docs/index.html` – the map (MapLibre GL JS 5.6.0 and pmtiles 4.3.0 from a CDN, no build step)
+- `docs/index.html` – the map (MapLibre GL JS 5.6.0 from a CDN, no build step; imagery tiles from stars)
 - `docs/credits.html` – credits, licenses, thanks
 - `docs/oam-pmtiles.md` – what we found when we tried the OAM PMTiles feature
 - `tools/tiles_to_pmtiles.py` – packs a `z/x/y.webp` folder into one PMTiles file

@@ -18,3 +18,9 @@ Large files (GeoTIFF, tiles, PMTiles) are not committed. They live in `/Users/hf
 ## Not done on purpose
 - No contact with OAM or HOT people. Drafts go to `drafts/` for the maintainer to send.
 - No marks or notes that point to people or houses on the imagery.
+
+## 2026-10-22: Map reads imagery through Martin (XYZ), not through the pmtiles library
+The map first used the pmtiles library on `depot.optgeo.org`. Browsers failed at the CORS pre-check (OPTIONS with `Range` returns 405 on the Caddy server). We did not change the stars server settings. The map uses `https://stars.optgeo.org/waterloo-oam` (Martin, CORS works) and does not load the pmtiles library. If depot gets the right CORS headers later, the pmtiles library can be used again.
+
+## Placement on stars
+New file `waterloo-oam.pmtiles` in `/home/stars/data/` (rsync to a temporary name, SHA-256 checked, then renamed). Martin picked it up without a restart. No existing file was changed.
