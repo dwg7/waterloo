@@ -28,3 +28,10 @@ New file `waterloo-oam.pmtiles` in `/home/stars/data/` (rsync to a temporary nam
 ## 2026-10-24: depot CORS fixed by stars; the map still uses Martin
 The stars maintainers added CORS handling for `depot.optgeo.org` on 2026-10-22 (OPTIONS returns 204 with `Access-Control-Allow-Headers: Range`, and `Content-Range` is exposed). We re-checked on 2026-10-24: OPTIONS 204; three Range GETs returned 206.
 We keep Martin XYZ for the map. Reason: stars saw a Range request answered with 200 (the whole 7.4 GB file) three times in a few minutes, through Cloudflare but not from the origin. The cause is not known. We have not checked whether the pmtiles library stops reading in that case. If we switch to direct reads later, the page should refuse a 200 answer to a Range request.
+
+## 2026-10-24: Vector colours — cyan buildings, yellow roads, dark casing
+The first version used red outlines with a light red fill. Red was hard to see on the red-brown roofs that are common in this scene. We compared four options on the same view (red; cyan, white and yellow, each over a dark casing). Cyan with a dark casing was readable on red roofs, blue roofs, sand and vegetation. White was weak on pale sand and roofs. Yellow was weak on sand.
+- Buildings: cyan `#00e5ff` line over a dark navy casing, no fill (a fill makes the image details muddy).
+- Roads (subtype `road` only): yellow `#ffd400` over a dark casing, so roads and buildings differ.
+- Line width grows with zoom.
+- This is our own judgement from looking at one area, not a test with many people. The light-over-dark casing on imagery is common in editors and satellite basemaps; the exact colours are our choice.
