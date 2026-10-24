@@ -32,9 +32,9 @@
   <p>Drone imagery (about 5 cm) with Overture buildings. A dwg7 activity. Not an official OAM or HOT project.</p>
   <label><input type="checkbox" id="imgOn" checked> Drone imagery</label>
   <input type="range" id="imgOp" min="0" max="100" value="100" aria-label="Imagery opacity">
-  <label><input type="checkbox" id="bldOn" checked> Overture buildings (outline)</label>
-  <input type="range" id="bldOp" min="0" max="100" value="90" aria-label="Buildings opacity">
-  <label><input type="checkbox" id="roadOn"> Overture roads</label>
+  <label><input type="checkbox" id="bldOn" checked> Overture buildings (cyan outline)</label>
+  <input type="range" id="bldOp" min="0" max="100" value="100" aria-label="Buildings opacity">
+  <label><input type="checkbox" id="roadOn"> Overture roads (yellow)</label>
   <p><a href="credits.html">Credits and thanks</a> · <a href="https://github.com/dwg7/waterloo/blob/main/docs/oam-pmtiles.md">Report on OAM PMTiles</a></p>
 </div>
 
@@ -66,13 +66,25 @@
       layers: [
         { id: "bg", type: "background", paint: { "background-color": "#d9d6cf" } },
         { id: "imagery", type: "raster", source: "imagery" },
+        // Outlines are drawn as a light line over a dark casing, so they stay readable on red roofs,
+        // sand, vegetation and shadow. Cyan and yellow are far from the red-brown and green of the scene,
+        // and stay distinguishable for most colour-blind viewers.
+        { id: "roads-casing", type: "line", source: "roads", "source-layer": "segment",
+          filter: ["==", ["get", "subtype"], "road"], layout: { visibility: "none", "line-join": "round" },
+          paint: { "line-color": "#1b1200", "line-opacity": 0.8,
+                   "line-width": ["interpolate", ["linear"], ["zoom"], 14, 2, 18, 4.5, 21, 8] } },
         { id: "roads", type: "line", source: "roads", "source-layer": "segment",
-          layout: { visibility: "none" },
-          paint: { "line-color": "#ffd400", "line-width": 1.5 } },
-        { id: "buildings-fill", type: "fill", source: "buildings", "source-layer": "building",
-          paint: { "fill-color": "#ff3b30", "fill-opacity": 0.12 } },
+          filter: ["==", ["get", "subtype"], "road"], layout: { visibility: "none", "line-join": "round" },
+          paint: { "line-color": "#ffd400",
+                   "line-width": ["interpolate", ["linear"], ["zoom"], 14, 0.8, 18, 2, 21, 4] } },
+        { id: "buildings-casing", type: "line", source: "buildings", "source-layer": "building",
+          layout: { "line-join": "round" },
+          paint: { "line-color": "#0a1a2f", "line-opacity": 0.8,
+                   "line-width": ["interpolate", ["linear"], ["zoom"], 14, 1.5, 18, 3, 21, 4.5] } },
         { id: "buildings-line", type: "line", source: "buildings", "source-layer": "building",
-          paint: { "line-color": "#ff3b30", "line-width": 1.2, "line-opacity": 0.9 } }
+          layout: { "line-join": "round" },
+          paint: { "line-color": "#00e5ff",
+                   "line-width": ["interpolate", ["linear"], ["zoom"], 14, 0.6, 18, 1.3, 21, 2] } }
       ]
     }
   });
@@ -84,13 +96,13 @@
   map.on("load", () => {
     $("imgOn").onchange = e => vis(["imagery"], e.target.checked);
     $("imgOp").oninput = e => map.setPaintProperty("imagery", "raster-opacity", e.target.value / 100);
-    $("bldOn").onchange = e => vis(["buildings-fill", "buildings-line"], e.target.checked);
+    $("bldOn").onchange = e => vis(["buildings-casing", "buildings-line"], e.target.checked);
     $("bldOp").oninput = e => {
       const o = e.target.value / 100;
       map.setPaintProperty("buildings-line", "line-opacity", o);
-      map.setPaintProperty("buildings-fill", "fill-opacity", o * 0.13);
+      map.setPaintProperty("buildings-casing", "line-opacity", o * 0.8);
     };
-    $("roadOn").onchange = e => vis(["roads"], e.target.checked);
+    $("roadOn").onchange = e => vis(["roads-casing", "roads"], e.target.checked);
   });
 </script>
 </body>
