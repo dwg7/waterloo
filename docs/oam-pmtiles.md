@@ -47,7 +47,7 @@ Because the OAM file stops at z20 (256 px), we made a second file from the same 
 - It is served from stars as `waterloo-oam` (Martin) after an rsync with matching SHA-256.
 
 ## Note about reading PMTiles from a web page
-`depot.optgeo.org` (stars) answers byte-range GET requests, but answers the browser's CORS pre-check (OPTIONS with `Range`) with 405, so a page on another origin cannot use the pmtiles library on it directly. Our map uses the Martin XYZ tiles instead. (This is about stars, not OAM.)
+`depot.optgeo.org` (stars) answers byte-range GET requests, but answers the browser's CORS pre-check (OPTIONS with `Range`) with 405, so a page on another origin cannot use the pmtiles library on it directly. Our map uses the Martin XYZ tiles instead. (This is about stars, not OAM.) Update 2026-10-24: the stars maintainers have since fixed this, and we confirmed OPTIONS 204 and Range 206. They also saw a Range request answered with 200 (the whole file) a few times via Cloudflare; the cause is unknown.
 The OAM file URL (S3) was not tested for CORS from a browser.
 
 ## Not yet done

@@ -24,3 +24,7 @@ The map first used the pmtiles library on `depot.optgeo.org`. Browsers failed at
 
 ## Placement on stars
 New file `waterloo-oam.pmtiles` in `/home/stars/data/` (rsync to a temporary name, SHA-256 checked, then renamed). Martin picked it up without a restart. No existing file was changed.
+
+## 2026-10-24: depot CORS fixed by stars; the map still uses Martin
+The stars maintainers added CORS handling for `depot.optgeo.org` on 2026-10-22 (OPTIONS returns 204 with `Access-Control-Allow-Headers: Range`, and `Content-Range` is exposed). We re-checked on 2026-10-24: OPTIONS 204; three Range GETs returned 206.
+We keep Martin XYZ for the map. Reason: stars saw a Range request answered with 200 (the whole 7.4 GB file) three times in a few minutes, through Cloudflare but not from the origin. The cause is not known. We have not checked whether the pmtiles library stops reading in that case. If we switch to direct reads later, the page should refuse a 200 answer to a Range request.
